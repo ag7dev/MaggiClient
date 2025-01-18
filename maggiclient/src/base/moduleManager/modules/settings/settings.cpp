@@ -5,14 +5,14 @@
 #include <fstream>
 #include <iostream> 
 #include <sstream> 
-#include <filesystem> // Für Dateisystemoperationen
+#include <filesystem> // FÃ¼r Dateisystemoperationen
 #include "../../../moduleManager/modules/visual/esp.h" 
 #include "../../../moduleManager/modules/combat/reach.h" 
 #include "../../../moduleManager/modules/combat/aimassist.h" 
 #include "../../../moduleManager/modules/clicker/leftAutoClicker.h" 
 #include "../../../moduleManager/modules/clicker/rightAutoClicker.h" 
 
-namespace fs = std::filesystem; // Kürzel für die Nutzung von std::filesystem
+namespace fs = std::filesystem; // KÃ¼rzel fÃ¼r die Nutzung von std::filesystem
 
 void Settings::RenderMenu() {
     ImGui::BeginGroup();
@@ -20,10 +20,10 @@ void Settings::RenderMenu() {
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.12f, 0.12f, 0.12f, 0.5));
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10);
 
-    if (ImGui::BeginChild("settings", ImVec2(425, 300))) {  // Erhöhte Höhe für mehr Platz
+    if (ImGui::BeginChild("settings", ImVec2(425, 300))) {  // ErhÃ¶hte HÃ¶he fÃ¼r mehr Platz
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3);
 
-        // Toggle für das Aktivieren der Einstellungen
+        // Toggle fÃ¼r das Aktivieren der Einstellungen
         Menu::DoToggleButtonStuff(12345, "Enable Settings", &Settings::Enabled);
 
         // Button zum Laden der Konfiguration
@@ -33,13 +33,13 @@ void Settings::RenderMenu() {
             if (inputFile) {
                 std::string line;
                 while (std::getline(inputFile, line)) {
-                    if (line.empty() || line[0] == '#') continue; // Kommentare überspringen
+                    if (line.empty() || line[0] == '#') continue; // Kommentare Ã¼berspringen
                     size_t delimiterPos = line.find('=');
                     if (delimiterPos != std::string::npos) {
                         std::string key = line.substr(0, delimiterPos);
                         std::string value = line.substr(delimiterPos + 1);
 
-                        // Hier kannst du die Werte zuweisen
+
                         if (key == "esp_enabled") {
                             Esp::Enabled = (value == "true");
                         }
@@ -83,7 +83,6 @@ void Settings::RenderMenu() {
                         else if (key == "left_ignore_blocks") {
                             LeftAutoClicker::ignoreBlocks = (value == "true");
                         }
-                        // Füge hier weitere Einstellungen hinzu
                     }
                 }
                 inputFile.close();
@@ -115,7 +114,7 @@ void Settings::RenderMenu() {
                 outputFile << "left_max_cps=" << LeftAutoClicker::leftMaxCps << std::endl;
                 outputFile << "left_min_cps=" << LeftAutoClicker::leftMinCps << std::endl;
                 outputFile << "left_ignore_blocks=" << (LeftAutoClicker::ignoreBlocks ? "true" : "false") << std::endl;
-                // Neue Optionen hinzufügen
+                // Neue Optionen hinzufÃ¼gen
                 outputFile << "gay_mode=" << (Esp::GayMode ? "true" : "false") << std::endl;
                 outputFile << "rainbow_speed=" << Esp::RainbowSpeed << std::endl;
                 outputFile << "draw_tracers=" << (Esp::DrawTracers ? "true" : "false") << std::endl;
@@ -130,7 +129,7 @@ void Settings::RenderMenu() {
             }
         }
 
-        // Neue Einstellungen im Menü anzeigen
+        // Neue Einstellungen im MenÃ¼ anzeigen
         ImGui::Checkbox("Enable GayMode", &Esp::GayMode);
 
         ImGui::EndChild();
