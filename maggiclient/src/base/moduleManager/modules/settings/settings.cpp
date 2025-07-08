@@ -138,6 +138,17 @@ void Settings::RenderMenu() {
                             std::istringstream iss(value);
                             iss >> Esp::HealthBarColor[0] >> Esp::HealthBarColor[1] >> Esp::HealthBarColor[2] >> Esp::HealthBarColor[3];
                         }
+                        else if (key == "name_tag_box") {
+                            Esp::NameTagBox = (value == "true");
+                        }
+                        else if (key == "name_tag_box_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::NameTagBoxColor[0] >> Esp::NameTagBoxColor[1] >> Esp::NameTagBoxColor[2] >> Esp::NameTagBoxColor[3];
+                        }
+                        else if (key == "name_tag_outline_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::NameTagBoxOutlineColor[0] >> Esp::NameTagBoxOutlineColor[1] >> Esp::NameTagBoxOutlineColor[2] >> Esp::NameTagBoxOutlineColor[3];
+                        }
                         else if (key == "gay_mode") {
                             Esp::GayMode = (value == "true");
                         }
@@ -237,6 +248,9 @@ void Settings::RenderMenu() {
                 outputFile << "fade_distance=" << Esp::FadeDistance << std::endl;
                 outputFile << "health_bar=" << (Esp::HealthBar ? "true" : "false") << std::endl;
                 outputFile << "healthbar_color=" << Esp::HealthBarColor[0] << " " << Esp::HealthBarColor[1] << " " << Esp::HealthBarColor[2] << " " << Esp::HealthBarColor[3] << std::endl;
+                outputFile << "name_tag_box=" << (Esp::NameTagBox ? "true" : "false") << std::endl;
+                outputFile << "name_tag_box_color=" << Esp::NameTagBoxColor[0] << " " << Esp::NameTagBoxColor[1] << " " << Esp::NameTagBoxColor[2] << " " << Esp::NameTagBoxColor[3] << std::endl;
+                outputFile << "name_tag_outline_color=" << Esp::NameTagBoxOutlineColor[0] << " " << Esp::NameTagBoxOutlineColor[1] << " " << Esp::NameTagBoxOutlineColor[2] << " " << Esp::NameTagBoxOutlineColor[3] << std::endl;
                 outputFile << "gay_mode=" << (Esp::GayMode ? "true" : "false") << std::endl;
                 outputFile << "rainbow_speed=" << Esp::RainbowSpeed << std::endl;
                 outputFile << "draw_tracers=" << (Esp::DrawTracers ? "true" : "false") << std::endl;
