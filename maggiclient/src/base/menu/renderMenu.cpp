@@ -97,6 +97,8 @@ void Menu::RenderMenu()
         ImGui::EndChild();
     }
 
+    ImGui::Columns(1); // properly close column set to avoid ID stack issues
+
     ImGui::PopID();
     ImGui::End();
 }
