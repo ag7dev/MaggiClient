@@ -8,6 +8,7 @@ Die wichtigsten Module befinden sich unter `maggiclient/src/base/moduleManager/m
 
 - **Visual**
   - ESP mit Boxen, Healthbar und Tracern
+    - Optionaler Nametag-Kasten für bessere Lesbarkeit (mit Regenbogenschrift im GayMode)
 - **Combat**
   - AimAssist mit anpassbarer FOV und Glättung
   - Reach-Modul zur Veränderung der Angriffsdistanz

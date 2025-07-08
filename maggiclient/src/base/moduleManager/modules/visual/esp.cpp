@@ -228,7 +228,7 @@ void Esp::RenderUpdate()
             ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(left - 3, bottom - (diff * scaleFactor)), ImVec2(left - 1, bottom), healthBarColor);
         }
 
-        // Text (Name) mit Regenbogenfarbe
+        // Text (Name) with optional background box
         if (Text && Menu::Font->IsLoaded())
         {
             const char* name = data.name.c_str();
@@ -238,6 +238,16 @@ void Esp::RenderUpdate()
 
             if (data.distance > TextUnrenderDistance)
             {
+                if (NameTagBox)
+                {
+                    ImVec2 min(posX - 2, posY - 1);
+                    ImVec2 max(posX + textSize.x + 2, posY + textSize.y + 1);
+                    ImColor bg(NameTagBoxColor[0], NameTagBoxColor[1], NameTagBoxColor[2], NameTagBoxColor[3] * data.opacityFactor);
+                    ImColor border(NameTagBoxOutlineColor[0], NameTagBoxOutlineColor[1], NameTagBoxOutlineColor[2], NameTagBoxOutlineColor[3] * data.opacityFactor);
+                    ImGui::GetWindowDrawList()->AddRectFilled(min, max, bg);
+                    ImGui::GetWindowDrawList()->AddRect(min, max, border);
+                }
+
                 if (TextOutline)
                 {
                     RenderQOLF::DrawOutlinedText(Menu::Font, TextSize, ImVec2(posX, posY), textColor, outlineColor, name);
@@ -292,6 +302,10 @@ void Esp::RenderMenu()
 
         ImGui::ColorEdit4("Box Color", BoxColor.data());
         ImGui::ColorEdit4("Healthbar Color", HealthBarColor.data());
+
+        Menu::DoToggleButtonStuff(98123, "NameTag Box", &Esp::NameTagBox);
+        ImGui::ColorEdit4("NameTag Box Color", NameTagBoxColor.data());
+        ImGui::ColorEdit4("NameTag Outline Color", NameTagBoxOutlineColor.data());
 
 
         // Added "Draw Tracers" toggle
