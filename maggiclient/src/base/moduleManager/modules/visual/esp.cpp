@@ -244,7 +244,7 @@ void Esp::RenderUpdate()
                 }
                 else
                 {
-                    ImGui::GetWindowDrawList()->AddText(Menu::Font, TextSize, ImVec2(posX, posY), textColor, name);
+                    RenderQOLF::DrawShadowedText(Menu::Font, TextSize, ImVec2(posX, posY), textColor, name);
                 }
             }
 
@@ -261,7 +261,7 @@ void Esp::RenderUpdate()
             }
             else
             {
-                ImGui::GetWindowDrawList()->AddText(Menu::Font, distanceTextSize, ImVec2(posX, posY), textColor, distanceStr);
+                RenderQOLF::DrawShadowedText(Menu::Font, distanceTextSize, ImVec2(posX, posY), textColor, distanceStr);
             }
         }
     }
