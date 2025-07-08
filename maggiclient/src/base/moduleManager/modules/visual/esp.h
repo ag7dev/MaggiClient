@@ -37,6 +37,12 @@ struct Esp
     inline static std::array<float, 4> TextColor{1.0f, 1.0f, 1.0f, 1.0f};
     inline static bool TextOutline = true;
     inline static std::array<float, 4> TextOutlineColor{0, 0, 0, 1.0f};
+
+    // Background box behind the name tag for better contrast
+    inline static bool NameTagBox = true;
+    inline static std::array<float, 4> NameTagBoxColor{0.0f, 0.0f, 0.0f, 0.7f};
+    inline static std::array<float, 4> NameTagBoxOutlineColor{0.5f, 0.5f, 0.5f, 1.0f};
+
     inline static float TextUnrenderDistance = 14.0f;
 
     inline static float FadeDistance = 3.0f;
