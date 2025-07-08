@@ -16,8 +16,8 @@ void RightAutoClicker::Update()
 	if (Menu::Open) return;
 	if (SDK::Minecraft->IsInGuiState()) return;
 
-	jclass blockClass;
-	Java::AssignClass("net.minecraft.item.ItemBlock", blockClass);
+        jclass blockClass = nullptr;
+        Java::AssignClass("net.minecraft.item.ItemBlock", blockClass);
 	if (SDK::Minecraft->thePlayer->GetInventory().GetCurrentItem().GetInstance() == NULL) return;
 	if (blocksOnly && !Java::Env->IsInstanceOf(SDK::Minecraft->thePlayer->GetInventory().GetCurrentItem().GetItem(), blockClass)) return;
 
