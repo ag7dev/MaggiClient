@@ -240,12 +240,12 @@ void Esp::RenderUpdate()
             {
                 if (NameTagBox)
                 {
-                    ImVec2 min(posX - 2, posY - 1);
-                    ImVec2 max(posX + textSize.x + 2, posY + textSize.y + 1);
+                    ImVec2 rectMin(posX - 2, posY - 1);
+                    ImVec2 rectMax(posX + textSize.x + 2, posY + textSize.y + 1);
                     ImColor bg(NameTagBoxColor[0], NameTagBoxColor[1], NameTagBoxColor[2], NameTagBoxColor[3] * data.opacityFactor);
                     ImColor border(NameTagBoxOutlineColor[0], NameTagBoxOutlineColor[1], NameTagBoxOutlineColor[2], NameTagBoxOutlineColor[3] * data.opacityFactor);
-                    ImGui::GetWindowDrawList()->AddRectFilled(min, max, bg);
-                    ImGui::GetWindowDrawList()->AddRect(min, max, border);
+                    ImGui::GetWindowDrawList()->AddRectFilled(rectMin, rectMax, bg);
+                    ImGui::GetWindowDrawList()->AddRect(rectMin, rectMax, border);
                 }
 
                 if (TextOutline)
