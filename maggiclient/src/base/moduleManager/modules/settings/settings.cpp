@@ -83,6 +83,111 @@ void Settings::RenderMenu() {
                         else if (key == "left_ignore_blocks") {
                             LeftAutoClicker::ignoreBlocks = (value == "true");
                         }
+                        // Additional ESP settings
+                        else if (key == "esp_box") {
+                            Esp::Box = (value == "true");
+                        }
+                        else if (key == "filled_box") {
+                            Esp::FilledBox = (value == "true");
+                        }
+                        else if (key == "filled_box_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::FilledBoxColor[0] >> Esp::FilledBoxColor[1] >> Esp::FilledBoxColor[2];
+                        }
+                        else if (key == "second_filled_box_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::SecondFilledBoxColor[0] >> Esp::SecondFilledBoxColor[1] >> Esp::SecondFilledBoxColor[2];
+                        }
+                        else if (key == "filled_box_opacity") {
+                            Esp::FilledBoxOpacity = std::stof(value);
+                        }
+                        else if (key == "outline") {
+                            Esp::Outline = (value == "true");
+                        }
+                        else if (key == "outline_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::OutlineColor[0] >> Esp::OutlineColor[1] >> Esp::OutlineColor[2] >> Esp::OutlineColor[3];
+                        }
+                        else if (key == "esp_text") {
+                            Esp::Text = (value == "true");
+                        }
+                        else if (key == "text_size") {
+                            Esp::TextSize = std::stof(value);
+                        }
+                        else if (key == "text_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::TextColor[0] >> Esp::TextColor[1] >> Esp::TextColor[2] >> Esp::TextColor[3];
+                        }
+                        else if (key == "text_outline") {
+                            Esp::TextOutline = (value == "true");
+                        }
+                        else if (key == "text_outline_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::TextOutlineColor[0] >> Esp::TextOutlineColor[1] >> Esp::TextOutlineColor[2] >> Esp::TextOutlineColor[3];
+                        }
+                        else if (key == "text_unrender_distance") {
+                            Esp::TextUnrenderDistance = std::stof(value);
+                        }
+                        else if (key == "fade_distance") {
+                            Esp::FadeDistance = std::stof(value);
+                        }
+                        else if (key == "health_bar") {
+                            Esp::HealthBar = (value == "true");
+                        }
+                        else if (key == "healthbar_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::HealthBarColor[0] >> Esp::HealthBarColor[1] >> Esp::HealthBarColor[2] >> Esp::HealthBarColor[3];
+                        }
+                        else if (key == "gay_mode") {
+                            Esp::GayMode = (value == "true");
+                        }
+                        else if (key == "rainbow_speed") {
+                            Esp::RainbowSpeed = std::stof(value);
+                        }
+                        else if (key == "draw_tracers") {
+                            Esp::DrawTracers = (value == "true");
+                        }
+                        else if (key == "tracer_color") {
+                            std::istringstream iss(value);
+                            iss >> Esp::TracerColor[0] >> Esp::TracerColor[1] >> Esp::TracerColor[2] >> Esp::TracerColor[3];
+                        }
+                        else if (key == "tracer_start_position") {
+                            Esp::TracerStartPosition = std::stoi(value);
+                        }
+                        // AimAssist settings
+                        else if (key == "aim_visibility_check") {
+                            AimAssist::visibilityCheck = (value == "true");
+                        }
+                        else if (key == "aim_feedback") {
+                            AimAssist::aimAssistFeedback = (value == "true");
+                        }
+                        else if (key == "aim_fov_circle") {
+                            AimAssist::fovCircle = (value == "true");
+                        }
+                        else if (key == "aim_key") {
+                            AimAssist::aimKey = (value == "true");
+                        }
+                        else if (key == "aim_adaptive") {
+                            AimAssist::adaptive = (value == "true");
+                        }
+                        else if (key == "aim_adaptive_offset") {
+                            AimAssist::adaptiveOffset = std::stof(value);
+                        }
+                        else if (key == "aim_smooth") {
+                            AimAssist::smooth = std::stof(value);
+                        }
+                        else if (key == "aim_distance") {
+                            AimAssist::aimDistance = std::stof(value);
+                        }
+                        else if (key == "aim_random_yaw") {
+                            AimAssist::randomYaw = std::stof(value);
+                        }
+                        else if (key == "aim_random_pitch") {
+                            AimAssist::randomPitch = std::stof(value);
+                        }
+                        else if (key == "aim_target_priority") {
+                            AimAssist::targetPriority = std::stoi(value);
+                        }
                     }
                 }
                 inputFile.close();
@@ -114,12 +219,42 @@ void Settings::RenderMenu() {
                 outputFile << "left_max_cps=" << LeftAutoClicker::leftMaxCps << std::endl;
                 outputFile << "left_min_cps=" << LeftAutoClicker::leftMinCps << std::endl;
                 outputFile << "left_ignore_blocks=" << (LeftAutoClicker::ignoreBlocks ? "true" : "false") << std::endl;
-                // Neue Optionen hinzufügen
+
+                // ESP settings
+                outputFile << "esp_box=" << (Esp::Box ? "true" : "false") << std::endl;
+                outputFile << "filled_box=" << (Esp::FilledBox ? "true" : "false") << std::endl;
+                outputFile << "filled_box_color=" << Esp::FilledBoxColor[0] << " " << Esp::FilledBoxColor[1] << " " << Esp::FilledBoxColor[2] << std::endl;
+                outputFile << "second_filled_box_color=" << Esp::SecondFilledBoxColor[0] << " " << Esp::SecondFilledBoxColor[1] << " " << Esp::SecondFilledBoxColor[2] << std::endl;
+                outputFile << "filled_box_opacity=" << Esp::FilledBoxOpacity << std::endl;
+                outputFile << "outline=" << (Esp::Outline ? "true" : "false") << std::endl;
+                outputFile << "outline_color=" << Esp::OutlineColor[0] << " " << Esp::OutlineColor[1] << " " << Esp::OutlineColor[2] << " " << Esp::OutlineColor[3] << std::endl;
+                outputFile << "esp_text=" << (Esp::Text ? "true" : "false") << std::endl;
+                outputFile << "text_size=" << Esp::TextSize << std::endl;
+                outputFile << "text_color=" << Esp::TextColor[0] << " " << Esp::TextColor[1] << " " << Esp::TextColor[2] << " " << Esp::TextColor[3] << std::endl;
+                outputFile << "text_outline=" << (Esp::TextOutline ? "true" : "false") << std::endl;
+                outputFile << "text_outline_color=" << Esp::TextOutlineColor[0] << " " << Esp::TextOutlineColor[1] << " " << Esp::TextOutlineColor[2] << " " << Esp::TextOutlineColor[3] << std::endl;
+                outputFile << "text_unrender_distance=" << Esp::TextUnrenderDistance << std::endl;
+                outputFile << "fade_distance=" << Esp::FadeDistance << std::endl;
+                outputFile << "health_bar=" << (Esp::HealthBar ? "true" : "false") << std::endl;
+                outputFile << "healthbar_color=" << Esp::HealthBarColor[0] << " " << Esp::HealthBarColor[1] << " " << Esp::HealthBarColor[2] << " " << Esp::HealthBarColor[3] << std::endl;
                 outputFile << "gay_mode=" << (Esp::GayMode ? "true" : "false") << std::endl;
                 outputFile << "rainbow_speed=" << Esp::RainbowSpeed << std::endl;
                 outputFile << "draw_tracers=" << (Esp::DrawTracers ? "true" : "false") << std::endl;
                 outputFile << "tracer_color=" << Esp::TracerColor[0] << " " << Esp::TracerColor[1] << " " << Esp::TracerColor[2] << " " << Esp::TracerColor[3] << std::endl;
                 outputFile << "tracer_start_position=" << Esp::TracerStartPosition << std::endl;
+
+                // AimAssist settings
+                outputFile << "aim_visibility_check=" << (AimAssist::visibilityCheck ? "true" : "false") << std::endl;
+                outputFile << "aim_feedback=" << (AimAssist::aimAssistFeedback ? "true" : "false") << std::endl;
+                outputFile << "aim_fov_circle=" << (AimAssist::fovCircle ? "true" : "false") << std::endl;
+                outputFile << "aim_key=" << (AimAssist::aimKey ? "true" : "false") << std::endl;
+                outputFile << "aim_adaptive=" << (AimAssist::adaptive ? "true" : "false") << std::endl;
+                outputFile << "aim_adaptive_offset=" << AimAssist::adaptiveOffset << std::endl;
+                outputFile << "aim_smooth=" << AimAssist::smooth << std::endl;
+                outputFile << "aim_distance=" << AimAssist::aimDistance << std::endl;
+                outputFile << "aim_random_yaw=" << AimAssist::randomYaw << std::endl;
+                outputFile << "aim_random_pitch=" << AimAssist::randomPitch << std::endl;
+                outputFile << "aim_target_priority=" << AimAssist::targetPriority << std::endl;
 
                 outputFile.close();
                 ImGui::Text("Config saved successfully!");
