@@ -27,9 +27,9 @@ void Esp::Update()
 	// When the camera collides in the wall or the ground, or something like that, the calculation fails entirely because the position is obviously not the same.
 	if (CommonData::thirdPersonView != 0) {
 		Vector2 angles = player->GetAngles();
-		float distance = 8;
+		float cameraDist = 8;
 		if (CommonData::thirdPersonView == 2) {
-			distance = -distance;
+			cameraDist = -cameraDist;
 		}
 
 		// This whole calculation came from gaspers source from their reach module, which you can find in this cheat as well
@@ -38,9 +38,9 @@ void Esp::Update()
 		float cosPitch = std::cos(Math::degToRadiants(angles.y));
 		float sinPitch = std::sin(Math::degToRadiants(angles.y));
 
-		float x = renderPos.x - (cos * distance * cosPitch);
-		float y = renderPos.y + (distance * sinPitch);
-		float z = renderPos.z - (sin * distance * cosPitch);
+		float x = renderPos.x - (cos * cameraDist * cosPitch);
+		float y = renderPos.y + (cameraDist * sinPitch);
+		float z = renderPos.z - (sin * cameraDist * cosPitch);
 
 		// The raycast that is commented out below does not work that well for some reason, acts weirdly when colliding with chests, and other things.
 		// Also might be poor in performance.
@@ -54,7 +54,7 @@ void Esp::Update()
 
 	float renderPartialTicks = CommonData::renderPartialTicks;
 
-	for (CommonData::PlayerData entity : playerList)
+        for (const CommonData::PlayerData& entity : playerList)
 	{
 		Vector3 entityPos = entity.pos;
 		Vector3 entityLastPos = entity.lastPos;
@@ -63,9 +63,9 @@ void Esp::Update()
 		float entityHeight = (float)(entity.height / 2) + 0.2f;
 
 		Vector3 diff = pos - entityPos;
-		float dist = sqrt(pow(diff.x, 2) + pow(diff.y, 2) + pow(diff.z, 2)); // Sqrt((x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2)
+		float distanceVal = sqrt(pow(diff.x, 2) + pow(diff.y, 2) + pow(diff.z, 2)); // Sqrt((x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2)
 		// Regular distance check.
-		if (dist > 300) {
+		if (distanceVal > 300) {
 			continue;
 		}
 
@@ -94,43 +94,43 @@ void Esp::Update()
 
 		// Another note for this data, is we cannot use the bounding box values because it can be changed by the reach module, so its best we make our own values with the cost
 		// of consuming a little bit of resources for a bit of math.
-		std::vector<Vector3> boxVerticies{
+		std::vector<Vector3> boxVertices{
 			origin, top, left, right, back, front, left2, right2,back2, front2
 		};
 
 		// For when the player gets close to an entity, a fade factor; a value between 0 and 1, with basic math, can get a cool looking fade effect if the player is too close
 		// or inside the FadeDistance radius.
 		float fadeFactor = 1.0f;
-		if ((dist - 1) <= FadeDistance)
-			fadeFactor = ((dist - 1) / FadeDistance);
+		if ((distanceVal - 1) <= FadeDistance)
+			fadeFactor = ((distanceVal - 1) / FadeDistance);
 
 		// To render the distance value under the ESP box.
 		char distC[32];
-		std::snprintf(distC, sizeof(distC), "%.1f", dist);
+		std::snprintf(distC, sizeof(distC), "%.1f", distanceVal);
 		std::string distS(distC);
 
 		// Then finally taking all the data we acquired for this loop and pushing it to the data list.
-		newData.push_back(Data{
-			boxVerticies, // Box data
+		newData.push_back(EntityVisual{
+			boxVertices, // Box data
 			entity.name, // Entity name
 			distS + "m", // Distance
-			dist, // Real distance value (for fade)
+			distanceVal, // Real distance value (for fade)
 			fadeFactor, // Fade factor
 			entity.health, // Entity health
 			entity.maxHealth, // And max health (for health bar)
 			});
 	}
-	renderData = newData;
+	renderQueue = newData;
 }
 
 
 // Funktion zum Berechnen von Regenbogenfarben
-ImColor GetRainbowColor(float offset = 0.0f)
+static ImColor GetRainbowColor(float offset = 0.0f)
 {
     float time = ImGui::GetTime() + offset;
     float r = (std::sin(time * 2.0f) * 0.5f) + 0.5f;
-    float g = (std::sin(time * 2.0f + 2.0944f) * 0.5f) + 0.5f; // 2.0944 rad = 120°
-    float b = (std::sin(time * 2.0f + 4.1888f) * 0.5f) + 0.5f; // 4.1888 rad = 240°
+    float g = (std::sin(time * 2.0f + 2.0944f) * 0.5f) + 0.5f; // 2.0944 rad = 120
+    float b = (std::sin(time * 2.0f + 4.1888f) * 0.5f) + 0.5f; // 4.1888 rad = 240
     return ImColor(r, g, b, 1.0f); // Volle Deckkraft
 }
 
@@ -157,9 +157,9 @@ void Esp::RenderUpdate()
         break;
     }
 
-    for (Data data : renderData)
+    for (const EntityVisual& data : renderQueue)
     {
-        std::vector<Vector3> bv = data.boxVerticies;
+        std::vector<Vector3> bv = data.boxVertices;
 
         float left = FLT_MAX;
         float top = FLT_MAX;
@@ -167,7 +167,7 @@ void Esp::RenderUpdate()
         float bottom = FLT_MIN;
 
         bool skip = false;
-        for (Vector3 position : bv)
+        for (const Vector3& position : bv)
         {
             Vector2 p;
             if (!CWorldToScreen::WorldToScreen(position, CommonData::modelView, CommonData::projection, (int)screenSize.x, (int)screenSize.y, p))
@@ -185,10 +185,10 @@ void Esp::RenderUpdate()
         if (skip) continue;
 
         // Box und Farben
-        ImColor boxColor = GayMode ? GetRainbowColor() : ImColor(BoxColor[0], BoxColor[1], BoxColor[2], BoxColor[3] * data.opacityFadeFactor);
-        ImColor healthBarColor = GayMode ? GetRainbowColor(0.5f) : ImColor(HealthBarColor[0], HealthBarColor[1], HealthBarColor[2], HealthBarColor[3] * data.opacityFadeFactor);
-        ImColor outlineColor = GayMode ? GetRainbowColor(1.0f) : ImColor(OutlineColor[0], OutlineColor[1], OutlineColor[2], OutlineColor[3] * data.opacityFadeFactor);
-        ImColor textColor = GayMode ? GetRainbowColor(1.5f) : ImColor(TextColor[0], TextColor[1], TextColor[2], TextColor[3] * data.opacityFadeFactor);
+        ImColor boxColor = GayMode ? GetRainbowColor() : ImColor(BoxColor[0], BoxColor[1], BoxColor[2], BoxColor[3] * data.opacityFactor);
+        ImColor healthBarColor = GayMode ? GetRainbowColor(0.5f) : ImColor(HealthBarColor[0], HealthBarColor[1], HealthBarColor[2], HealthBarColor[3] * data.opacityFactor);
+        ImColor outlineColor = GayMode ? GetRainbowColor(1.0f) : ImColor(OutlineColor[0], OutlineColor[1], OutlineColor[2], OutlineColor[3] * data.opacityFactor);
+        ImColor textColor = GayMode ? GetRainbowColor(1.5f) : ImColor(TextColor[0], TextColor[1], TextColor[2], TextColor[3] * data.opacityFactor);
         ImColor tracerColor = GayMode ? GetRainbowColor(2.0f) : ImColor(TracerColor[0], TracerColor[1], TracerColor[2], TracerColor[3]);
 
         // Tracer-Logik
@@ -201,8 +201,8 @@ void Esp::RenderUpdate()
         // FilledBox nur ohne GayMode oder nicht aktiviert
         if (FilledBox && !GayMode)
         {
-            ImColor bottomColor = GayMode ? GetRainbowColor(0.2f) : ImColor(SecondFilledBoxColor[0], SecondFilledBoxColor[1], SecondFilledBoxColor[2], FilledBoxOpacity * data.opacityFadeFactor);
-            ImColor topColor = GayMode ? GetRainbowColor(0.3f) : ImColor(FilledBoxColor[0], FilledBoxColor[1], FilledBoxColor[2], FilledBoxOpacity * data.opacityFadeFactor);
+            ImColor bottomColor = GayMode ? GetRainbowColor(0.2f) : ImColor(SecondFilledBoxColor[0], SecondFilledBoxColor[1], SecondFilledBoxColor[2], FilledBoxOpacity * data.opacityFactor);
+            ImColor topColor = GayMode ? GetRainbowColor(0.3f) : ImColor(FilledBoxColor[0], FilledBoxColor[1], FilledBoxColor[2], FilledBoxOpacity * data.opacityFactor);
             ImGui::GetWindowDrawList()->AddRectFilledMultiColor(ImVec2(left, top), ImVec2(right, bottom), topColor, topColor, bottomColor, bottomColor);
         }
 
@@ -235,7 +235,7 @@ void Esp::RenderUpdate()
             float posX = left + ((right - left) / 2) - (textSize.x / 2);
             float posY = top - textSize.y - 1;
 
-            if (data.dist > TextUnrenderDistance)
+            if (data.distance > TextUnrenderDistance)
             {
                 if (TextOutline)
                 {
@@ -248,19 +248,19 @@ void Esp::RenderUpdate()
             }
 
             // Zeichne den Distanztext
-            const char* dist = data.distText.c_str();
-            float distTextSize = TextSize / 1.5;
-            textSize = Menu::Font->CalcTextSizeA(distTextSize, FLT_MAX, 0.0f, dist);
+            const char* distanceStr = data.distanceText.c_str();
+            float distanceTextSize = TextSize / 1.5;
+            textSize = Menu::Font->CalcTextSizeA(distanceTextSize, FLT_MAX, 0.0f, distanceStr);
             posX = left + ((right - left) / 2) - (textSize.x / 2);
             posY = bottom;
 
             if (TextOutline)
             {
-                RenderQOLF::DrawOutlinedText(Menu::Font, distTextSize, ImVec2(posX, posY), textColor, outlineColor, dist);
+                RenderQOLF::DrawOutlinedText(Menu::Font, distanceTextSize, ImVec2(posX, posY), textColor, outlineColor, distanceStr);
             }
             else
             {
-                ImGui::GetWindowDrawList()->AddText(Menu::Font, distTextSize, ImVec2(posX, posY), textColor, dist);
+                ImGui::GetWindowDrawList()->AddText(Menu::Font, distanceTextSize, ImVec2(posX, posY), textColor, distanceStr);
             }
         }
     }
