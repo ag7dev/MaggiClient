@@ -50,7 +50,8 @@ void Esp::Update()
 		renderPos = Vector3{ x,y,z };
 	}
 
-	std::vector<Data> newData;
+        // container to hold all rendering data for this frame
+        std::vector<EntityVisual> newData;
 
 	float renderPartialTicks = CommonData::renderPartialTicks;
 
@@ -289,14 +290,14 @@ void Esp::RenderMenu()
         Menu::DoSliderStuff(34875, "Fade Distance", &Esp::FadeDistance, 0, 10);
         Menu::DoSliderStuff(128763, "Text Size", &Esp::TextSize, 12, 24);
 
-        ImGui::ColorEdit4("Box Color", BoxColor);
-        ImGui::ColorEdit4("Healthbar Color", HealthBarColor);
+        ImGui::ColorEdit4("Box Color", BoxColor.data());
+        ImGui::ColorEdit4("Healthbar Color", HealthBarColor.data());
 
 
         // Added "Draw Tracers" toggle
         Menu::DoToggleButtonStuff(192837, "Draw Tracers", &Esp::DrawTracers);
         if (Esp::DrawTracers) {
-            ImGui::ColorEdit4("Tracer Color", TracerColor); // Color picker for tracers
+            ImGui::ColorEdit4("Tracer Color", TracerColor.data()); // Color picker for tracers
 
             // Dropdown for tracer starting position
             static const char* tracerOptions[] = { "Top of Screen", "Bottom of Screen", "Middle of Screen" };
