@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "menu.h"
 #include "../util/logger.h"
 #include "../../../ext/imgui/imgui.h"
@@ -8,6 +9,7 @@
 #include <filesystem>
 #include <sstream>
 #include <algorithm>
+#include <cstdlib>
 
 void Menu::Init()
 {
