@@ -174,13 +174,33 @@ void Menu::SetupImgui()
         colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
         colors[ImGuiCol_CheckMark] = Menu::AccentColor;
         colors[ImGuiCol_SliderGrab] = Menu::AccentColor;
-        colors[ImGuiCol_SliderGrabActive] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_SliderGrabActive] = ImVec4(
+                lighten(Menu::AccentColor.x, 0.1f),
+                lighten(Menu::AccentColor.y, 0.1f),
+                lighten(Menu::AccentColor.z, 0.1f),
+                Menu::AccentColor.w);
         colors[ImGuiCol_Button] = Menu::AccentColor;
-        colors[ImGuiCol_ButtonHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
-        colors[ImGuiCol_ButtonActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
+        colors[ImGuiCol_ButtonHovered] = ImVec4(
+                lighten(Menu::AccentColor.x, 0.1f),
+                lighten(Menu::AccentColor.y, 0.1f),
+                lighten(Menu::AccentColor.z, 0.1f),
+                Menu::AccentColor.w);
+        colors[ImGuiCol_ButtonActive] = ImVec4(
+                lighten(Menu::AccentColor.x, 0.2f),
+                lighten(Menu::AccentColor.y, 0.2f),
+                lighten(Menu::AccentColor.z, 0.2f),
+                Menu::AccentColor.w);
         colors[ImGuiCol_Header] = Menu::AccentColor;
-        colors[ImGuiCol_HeaderHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
-        colors[ImGuiCol_HeaderActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
+        colors[ImGuiCol_HeaderHovered] = ImVec4(
+                lighten(Menu::AccentColor.x, 0.1f),
+                lighten(Menu::AccentColor.y, 0.1f),
+                lighten(Menu::AccentColor.z, 0.1f),
+                Menu::AccentColor.w);
+        colors[ImGuiCol_HeaderActive] = ImVec4(
+                lighten(Menu::AccentColor.x, 0.2f),
+                lighten(Menu::AccentColor.y, 0.2f),
+                lighten(Menu::AccentColor.z, 0.2f),
+                Menu::AccentColor.w);
         colors[ImGuiCol_Separator] = ImVec4(0.32f, 0.32f, 0.32f, 0.3f);
         colors[ImGuiCol_SeparatorHovered] = ImVec4(0.32f, 0.32f, 0.32f, 1.00f);
         colors[ImGuiCol_SeparatorActive] = ImVec4(0.32f, 0.32f, 0.32f, 1.00f);
@@ -188,8 +208,16 @@ void Menu::SetupImgui()
         colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.60f);
         colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.90f);
         colors[ImGuiCol_Tab] = Menu::AccentColor;
-        colors[ImGuiCol_TabHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
-        colors[ImGuiCol_TabActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
+        colors[ImGuiCol_TabHovered] = ImVec4(
+                lighten(Menu::AccentColor.x, 0.1f),
+                lighten(Menu::AccentColor.y, 0.1f),
+                lighten(Menu::AccentColor.z, 0.1f),
+                Menu::AccentColor.w);
+        colors[ImGuiCol_TabActive] = ImVec4(
+                lighten(Menu::AccentColor.x, 0.2f),
+                lighten(Menu::AccentColor.y, 0.2f),
+                lighten(Menu::AccentColor.z, 0.2f),
+                Menu::AccentColor.w);
         colors[ImGuiCol_TabUnfocused] = ImVec4(0.05f, 0.05f, 0.05f, 0.90f);
         colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.13f, 0.13f, 0.13f, 0.74f);
         colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
