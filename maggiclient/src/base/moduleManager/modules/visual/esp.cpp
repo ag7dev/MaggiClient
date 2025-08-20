@@ -187,7 +187,17 @@ void Esp::RenderUpdate()
 
         // Box und Farben
         ImColor boxColor = GayMode ? GetRainbowColor() : ImColor(BoxColor[0], BoxColor[1], BoxColor[2], BoxColor[3] * data.opacityFactor);
-        ImColor healthBarColor = GayMode ? GetRainbowColor(0.5f) : ImColor(HealthBarColor[0], HealthBarColor[1], HealthBarColor[2], HealthBarColor[3] * data.opacityFactor);
+        ImColor shadowColor = ImColor(BoxShadowColor[0], BoxShadowColor[1], BoxShadowColor[2], BoxShadowColor[3] * data.opacityFactor);
+        ImColor healthBarColor;
+        if (GayMode)
+            healthBarColor = GetRainbowColor(0.5f);
+        else if (DynamicHealthBarColor && data.maxHealth > 0)
+        {
+            float healthPercent = data.health / data.maxHealth;
+            healthBarColor = ImColor(1.0f - healthPercent, healthPercent, 0.0f, HealthBarColor[3] * data.opacityFactor);
+        }
+        else
+            healthBarColor = ImColor(HealthBarColor[0], HealthBarColor[1], HealthBarColor[2], HealthBarColor[3] * data.opacityFactor);
         ImColor outlineColor = GayMode ? GetRainbowColor(1.0f) : ImColor(OutlineColor[0], OutlineColor[1], OutlineColor[2], OutlineColor[3] * data.opacityFactor);
         ImColor textColor = GayMode ? GetRainbowColor(1.5f) : ImColor(TextColor[0], TextColor[1], TextColor[2], TextColor[3] * data.opacityFactor);
         ImColor tracerColor = GayMode ? GetRainbowColor(2.0f) : ImColor(TracerColor[0], TracerColor[1], TracerColor[2], TracerColor[3]);
@@ -196,7 +206,7 @@ void Esp::RenderUpdate()
         if (DrawTracers)
         {
             ImVec2 boxCenter((left + right) / 2, (top + bottom) / 2); // Mitte der Box
-            ImGui::GetWindowDrawList()->AddLine(tracerStartPosition, boxCenter, tracerColor, 2.0f);
+            ImGui::GetWindowDrawList()->AddLine(tracerStartPosition, boxCenter, tracerColor, TracerThickness);
         }
 
         // FilledBox nur ohne GayMode oder nicht aktiviert
@@ -210,20 +220,24 @@ void Esp::RenderUpdate()
         // Box nur mit Umrandung (Kein Fill bei GayMode)
         if (Box)
         {
-            ImGui::GetWindowDrawList()->AddRect(ImVec2(left, top), ImVec2(right, bottom), boxColor);
+            if (BoxShadow)
+            {
+                ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(left + 1, top + 1), ImVec2(right + 1, bottom + 1), shadowColor, BoxRounding);
+            }
+            ImGui::GetWindowDrawList()->AddRect(ImVec2(left, top), ImVec2(right, bottom), boxColor, BoxRounding, 0, BoxThickness);
         }
 
         // Outline (immer in Regenbogenfarbe, wenn GayMode aktiv)
         if (Outline)
         {
-            ImGui::GetWindowDrawList()->AddRect(ImVec2(left - 1, top - 1), ImVec2(right + 1, bottom + 1), outlineColor);
-            ImGui::GetWindowDrawList()->AddRect(ImVec2(left + 1, top + 1), ImVec2(right - 1, bottom - 1), outlineColor);
+            ImGui::GetWindowDrawList()->AddRect(ImVec2(left - 1, top - 1), ImVec2(right + 1, bottom + 1), outlineColor, BoxRounding, 0, OutlineThickness);
+            ImGui::GetWindowDrawList()->AddRect(ImVec2(left + 1, top + 1), ImVec2(right - 1, bottom - 1), outlineColor, BoxRounding, 0, OutlineThickness);
         }
 
         // Healthbar
         if (HealthBar)
         {
-            float scaleFactor = data.health / data.maxHealth;
+            float scaleFactor = data.maxHealth > 0 ? data.health / data.maxHealth : 0.0f;
             float diff = bottom - top;
             ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(left - 3, bottom - (diff * scaleFactor)), ImVec2(left - 1, bottom), healthBarColor);
         }
@@ -296,22 +310,57 @@ void Esp::RenderMenu()
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
         ImGui::Separator();
         Menu::DoToggleButtonStuff(23445, "Show Healthbar", &Esp::HealthBar);
+        Menu::DoToggleButtonStuff(45678, "Dynamic Healthbar Color", &Esp::DynamicHealthBarColor);
+        if (!DynamicHealthBarColor)
+            ImGui::ColorEdit4("Healthbar Color", HealthBarColor.data());
+
         Menu::DoToggleButtonStuff(34576, "Show Text", &Esp::Text);
         Menu::DoSliderStuff(34875, "Fade Distance", &Esp::FadeDistance, 0, 10);
         Menu::DoSliderStuff(128763, "Text Size", &Esp::TextSize, 12, 24);
+        Menu::DoToggleButtonStuff(76543, "Text Outline", &Esp::TextOutline);
 
-        ImGui::ColorEdit4("Box Color", BoxColor.data());
-        ImGui::ColorEdit4("Healthbar Color", HealthBarColor.data());
+        Menu::DoToggleButtonStuff(11223, "Draw Box", &Esp::Box);
+        if (Esp::Box)
+        {
+            ImGui::ColorEdit4("Box Color", BoxColor.data());
+            Menu::DoSliderStuff(87234, "Box Rounding", &Esp::BoxRounding, 0.0f, 10.0f);
+            Menu::DoSliderStuff(77234, "Box Thickness", &Esp::BoxThickness, 1.0f, 5.0f);
+            Menu::DoToggleButtonStuff(76234, "Box Shadow", &Esp::BoxShadow);
+            if (Esp::BoxShadow)
+                ImGui::ColorEdit4("Shadow Color", BoxShadowColor.data());
+        }
+
+        Menu::DoToggleButtonStuff(22334, "Filled Box", &Esp::FilledBox);
+        if (Esp::FilledBox)
+        {
+            ImGui::ColorEdit3("Top Fill Color", FilledBoxColor.data());
+            ImGui::ColorEdit3("Bottom Fill Color", SecondFilledBoxColor.data());
+            Menu::DoSliderStuff(99345, "Fill Opacity", &Esp::FilledBoxOpacity, 0.0f, 1.0f);
+        }
+
+        Menu::DoToggleButtonStuff(33445, "Outline", &Esp::Outline);
+        if (Esp::Outline || Esp::TextOutline)
+        {
+            ImGui::ColorEdit4("Outline Color", OutlineColor.data());
+        }
+        if (Esp::Outline)
+        {
+            Menu::DoSliderStuff(74854, "Outline Thickness", &Esp::OutlineThickness, 1.0f, 5.0f);
+        }
 
         Menu::DoToggleButtonStuff(98123, "NameTag Box", &Esp::NameTagBox);
-        ImGui::ColorEdit4("NameTag Box Color", NameTagBoxColor.data());
-        ImGui::ColorEdit4("NameTag Outline Color", NameTagBoxOutlineColor.data());
+        if (Esp::NameTagBox)
+        {
+            ImGui::ColorEdit4("NameTag Box Color", NameTagBoxColor.data());
+            ImGui::ColorEdit4("NameTag Outline Color", NameTagBoxOutlineColor.data());
+        }
 
 
         // Added "Draw Tracers" toggle
         Menu::DoToggleButtonStuff(192837, "Draw Tracers", &Esp::DrawTracers);
         if (Esp::DrawTracers) {
             ImGui::ColorEdit4("Tracer Color", TracerColor.data()); // Color picker for tracers
+            Menu::DoSliderStuff(83746, "Tracer Thickness", &Esp::TracerThickness, 1.0f, 5.0f);
 
             // Dropdown for tracer starting position
             static const char* tracerOptions[] = { "Top of Screen", "Bottom of Screen", "Middle of Screen" };
