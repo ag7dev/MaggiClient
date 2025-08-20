@@ -17,6 +17,7 @@
 
 #include "../sdk/net/minecraft/client/Minecraft.h"
 #include "../util/logger.h"
+#include <algorithm>
 
 int currentTab = -1;
 
@@ -29,6 +30,12 @@ void Menu::RenderMenu()
     ImGui::Begin(Menu::Title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     ImVec2 idk = ImGui::GetWindowSize();
 
+    ImVec2 windowPos = ImGui::GetWindowPos();
+    ImVec2 display = ImGui::GetIO().DisplaySize;
+    windowPos.x = std::clamp(windowPos.x, 0.0f, display.x - idk.x);
+    windowPos.y = std::clamp(windowPos.y, 0.0f, display.y - idk.y);
+    ImGui::SetWindowPos(windowPos);
+
     int buttonAmount = 6;
     int buttonHeight = 20;
     ImGui::PushID("Start");
@@ -36,7 +43,6 @@ void Menu::RenderMenu()
     float columnWidth = 110;
     ImGui::SetColumnWidth(0, columnWidth);
 
-    ImVec2 windowPos = ImGui::GetWindowPos();
     ImVec2 textSize = Menu::FontBold->CalcTextSizeA(28, FLT_MAX, 0.0f, "ag7-dev");
     float posX = windowPos.x + (columnWidth / 2) - (textSize.x / 2);
     float posY = windowPos.y + 20;
