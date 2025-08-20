@@ -1,11 +1,12 @@
-#include "settings.h"
 #define _CRT_SECURE_NO_WARNINGS
+#include "settings.h"
 #include "../../../../../ext/imgui/imgui.h"
 #include "../../../menu/menu.h" 
 #include <fstream>
 #include <iostream> 
-#include <sstream> 
+#include <sstream>
 #include <filesystem> // Für Dateisystemoperationen
+#include <cstdlib>
 #include "../../../moduleManager/modules/visual/esp.h" 
 #include "../../../moduleManager/modules/combat/reach.h" 
 #include "../../../moduleManager/modules/combat/aimassist.h" 
