@@ -8,18 +8,19 @@
 
 struct Menu
 {
-	static void Init();
-	static void Kill();
+        static void Init();
+        static void Kill();
 
-	static inline std::string Title;
-	static inline bool Open;
-	static inline int Keybind;
-	static inline ImFont* Font;
-	static inline ImFont* FontBold;
-	static inline bool Initialized;
+        static inline std::string Title;
+        static inline bool Open;
+        static inline int Keybind;
+        static inline ImFont* Font;
+        static inline ImFont* FontBold;
+        static inline bool Initialized;
+        static inline ImVec4 AccentColor{0.19f, 0.19f, 0.19f, 1.f};
 
-	static void SetupImgui();
-	static void RenderMenu();
+        static void SetupImgui();
+        static void RenderMenu();
 
 	static void ToggleButton(const char* format, bool* value);
 	static bool TabButton(const char* format, ImVec4 color);
@@ -33,10 +34,13 @@ struct Menu
 	static inline HGLRC OriginalGLContext;
 	static inline HGLRC MenuGLContext;
 
-	static inline ImGuiContext* CurrentImGuiContext;
+        static inline ImGuiContext* CurrentImGuiContext;
 
-	static void PlaceHooks();
-	static void RemoveHooks();
+        static void PlaceHooks();
+        static void RemoveHooks();
+
+        static void LoadStyle();
+        static void SaveStyle();
 
 	static void Hook_wglSwapBuffers();
 	static void Hook_wndProc();

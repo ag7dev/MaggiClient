@@ -11,6 +11,7 @@
 #include "../../util/logger.h"
 #include "../../util/trimmer.h"
 #include "../../../../ext/fonts/jetbrainsmono.h"
+#include <algorithm>
 
 #include "../../base.h"
 
@@ -165,28 +166,29 @@ void Menu::SetupImgui()
 	colors[ImGuiCol_TitleBgActive] = ImVec4(0.065f, 0.065f, 0.065f, 0.90);
 	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.065f, 0.065f, 0.065f, 0.90);
 	colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.00);
-	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
-	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-	colors[ImGuiCol_CheckMark] = ImVec4(0.56f, 0.10f, 0.10f, 1.00f);
-	colors[ImGuiCol_SliderGrab] = ImVec4(0.4, 0.7f, 0.7f, 1.0f);
-	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.5, 0.89f, 0.89f, 1.00f);
-	colors[ImGuiCol_Button] = ImVec4(0.19f, 0.19f, 0.19f, 1.f);
-	colors[ImGuiCol_ButtonHovered] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
-	colors[ImGuiCol_ButtonActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.00f);
-	colors[ImGuiCol_Header] = ImVec4(0.33f, 0.35f, 0.36f, 0.53f);
-	colors[ImGuiCol_HeaderHovered] = ImVec4(0.f, 0.44f, 0.44f, 0.67f);
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.47f, 0.47f, 0.47f, 0.67f);
-	colors[ImGuiCol_Separator] = ImVec4(0.32f, 0.32f, 0.32f, 0.3);
-	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.32f, 0.32f, 0.32f, 1.00f);
-	colors[ImGuiCol_SeparatorActive] = ImVec4(0.32f, 0.32f, 0.32f, 1.00f);
-	colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.85f);
-	colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.60f);
-	colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.90f);
-	colors[ImGuiCol_Tab] = ImVec4(0.07f, 0.07f, 0.07f, 0.51f);
-	colors[ImGuiCol_TabHovered] = ImVec4(0, 0.23f, 0.23f, 0.67f);
-	colors[ImGuiCol_TabActive] = ImVec4(0.19f, 0.19f, 0.19f, 0.57f);
+        colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.00);
+        colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
+        colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
+        colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
+        auto lighten = [](float c, float amount) { return std::min(c + amount, 1.0f); };
+        colors[ImGuiCol_CheckMark] = Menu::AccentColor;
+        colors[ImGuiCol_SliderGrab] = Menu::AccentColor;
+        colors[ImGuiCol_SliderGrabActive] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_Button] = Menu::AccentColor;
+        colors[ImGuiCol_ButtonHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_ButtonActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
+        colors[ImGuiCol_Header] = Menu::AccentColor;
+        colors[ImGuiCol_HeaderHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_HeaderActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
+        colors[ImGuiCol_Separator] = ImVec4(0.32f, 0.32f, 0.32f, 0.3);
+        colors[ImGuiCol_SeparatorHovered] = ImVec4(0.32f, 0.32f, 0.32f, 1.00f);
+        colors[ImGuiCol_SeparatorActive] = ImVec4(0.32f, 0.32f, 0.32f, 1.00f);
+        colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.85f);
+        colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.60f);
+        colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.90f);
+        colors[ImGuiCol_Tab] = Menu::AccentColor;
+        colors[ImGuiCol_TabHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_TabActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
 	colors[ImGuiCol_TabUnfocused] = ImVec4(0.05f, 0.05f, 0.05f, 0.90f);
 	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.13f, 0.13f, 0.13f, 0.74f);
 	colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
@@ -205,10 +207,10 @@ void Menu::SetupImgui()
 	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
-	ImGuiStyle& style = ImGui::GetStyle();
-	style.WindowRounding = 10.0f;
-	style.WindowBorderSize = 0;
-	style.WindowPadding = ImVec2(0,0);
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.WindowRounding = 10.0f;
+        style.WindowBorderSize = 0;
+        style.WindowPadding = ImVec2(0,0);
 
 	ImGui_ImplWin32_Init(Menu::HandleWindow);
 	ImGui_ImplOpenGL2_Init();
