@@ -23,6 +23,7 @@ struct Esp
 
     inline static bool Box = true;
     inline static std::array<float, 4> BoxColor{0, 0, 0, 1};
+    inline static float BoxThickness = 1.0f;
 
     inline static bool FilledBox = true;
     inline static std::array<float, 3> FilledBoxColor{0, 0, 0};
@@ -31,6 +32,11 @@ struct Esp
 
     inline static bool Outline = true;
     inline static std::array<float, 4> OutlineColor{0, 0, 0, 0.25f};
+    inline static float OutlineThickness = 1.0f;
+
+    inline static bool BoxShadow = false;
+    inline static std::array<float, 4> BoxShadowColor{0.0f, 0.0f, 0.0f, 0.5f};
+    inline static float BoxRounding = 0.0f;
 
     inline static bool Text = true;
     inline static float TextSize = 18;
@@ -49,6 +55,7 @@ struct Esp
 
     inline static bool HealthBar = true;
     inline static std::array<float, 4> HealthBarColor{0.0f, 1.0f, 0.0f, 1.0f};
+    inline static bool DynamicHealthBarColor = true;
 
     inline static bool GayMode = false;
     inline static float RainbowSpeed = 0.5f;
@@ -56,6 +63,7 @@ struct Esp
     inline static bool DrawTracers = false;
     inline static std::array<float, 4> TracerColor{1.0f, 1.0f, 1.0f, 1.0f};
     inline static int TracerStartPosition = 1; // 0: Top, 1: Bottom, 2: Middle
+    inline static float TracerThickness = 2.0f;
 
     static void Update();
     static void RenderUpdate();
