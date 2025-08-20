@@ -26,6 +26,8 @@ void Settings::RenderMenu() {
         // Toggle für das Aktivieren der Einstellungen
         Menu::DoToggleButtonStuff(12345, "Enable Settings", &Settings::Enabled);
 
+        ImGui::ColorEdit4("Menu Accent", (float*)&Menu::AccentColor);
+
         // Button zum Laden der Konfiguration
         if (ImGui::Button("Load Config")) {
             fs::path configPath = fs::path(getenv("USERPROFILE")) / "Desktop" / "maggiclient" / "maggiclientconfig.txt";
@@ -82,6 +84,10 @@ void Settings::RenderMenu() {
                         }
                         else if (key == "left_ignore_blocks") {
                             LeftAutoClicker::ignoreBlocks = (value == "true");
+                        }
+                        else if (key == "menu_accent_color") {
+                            std::istringstream iss(value);
+                            iss >> Menu::AccentColor.x >> Menu::AccentColor.y >> Menu::AccentColor.z >> Menu::AccentColor.w;
                         }
                         // Additional ESP settings
                         else if (key == "esp_box") {
@@ -230,6 +236,7 @@ void Settings::RenderMenu() {
                 outputFile << "left_max_cps=" << LeftAutoClicker::leftMaxCps << std::endl;
                 outputFile << "left_min_cps=" << LeftAutoClicker::leftMinCps << std::endl;
                 outputFile << "left_ignore_blocks=" << (LeftAutoClicker::ignoreBlocks ? "true" : "false") << std::endl;
+                outputFile << "menu_accent_color=" << Menu::AccentColor.x << " " << Menu::AccentColor.y << " " << Menu::AccentColor.z << " " << Menu::AccentColor.w << std::endl;
 
                 // ESP settings
                 outputFile << "esp_box=" << (Esp::Box ? "true" : "false") << std::endl;

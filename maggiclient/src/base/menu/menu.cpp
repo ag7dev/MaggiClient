@@ -4,6 +4,10 @@
 #include "../../../ext/imgui/imgui_internal.h"
 #include "../../../ext/imgui/imgui_impl_win32.h"
 #include "../../../ext/imgui/imgui_impl_opengl2.h"
+#include <fstream>
+#include <filesystem>
+#include <sstream>
+#include <algorithm>
 
 void Menu::Init()
 {
@@ -12,7 +16,8 @@ void Menu::Init()
 	Menu::Open = false;
 	Menu::Keybind = VK_INSERT;
 
-	Menu::PlaceHooks();
+        Menu::LoadStyle();
+        Menu::PlaceHooks();
 }
 
 void Menu::ToggleButton(const char* format, bool* value)
@@ -104,8 +109,9 @@ void Menu::GlitchText(const char* text, ImVec2 pos)
 
 void Menu::Kill()
 {
-	Menu::Open = false;
-	Menu::RemoveHooks();
+        Menu::Open = false;
+        Menu::SaveStyle();
+        Menu::RemoveHooks();
 	wglMakeCurrent(Menu::HandleDeviceContext, Menu::OriginalGLContext);
 	wglDeleteContext(Menu::MenuGLContext);
 	ImGui::DestroyContext();
@@ -119,6 +125,59 @@ void Menu::PlaceHooks()
 
 void Menu::RemoveHooks()
 {
-	Menu::Unhook_wndProc();
-	Menu::Unhook_wglSwapBuffers();
+        Menu::Unhook_wndProc();
+        Menu::Unhook_wglSwapBuffers();
+}
+
+void Menu::LoadStyle()
+{
+        namespace fs = std::filesystem;
+        fs::path configPath = fs::path(getenv("USERPROFILE")) / "Desktop" / "maggiclient" / "maggiclientconfig.txt";
+        std::ifstream inputFile(configPath);
+        if (inputFile)
+        {
+                std::string line;
+                while (std::getline(inputFile, line))
+                {
+                        if (line.rfind("menu_accent_color=", 0) == 0)
+                        {
+                                std::istringstream iss(line.substr(18));
+                                iss >> Menu::AccentColor.x >> Menu::AccentColor.y >> Menu::AccentColor.z >> Menu::AccentColor.w;
+                        }
+                }
+        }
+}
+
+void Menu::SaveStyle()
+{
+        namespace fs = std::filesystem;
+        fs::path configPath = fs::path(getenv("USERPROFILE")) / "Desktop" / "maggiclient" / "maggiclientconfig.txt";
+        fs::create_directories(configPath.parent_path());
+
+        std::ifstream input(configPath);
+        std::stringstream buffer;
+        bool found = false;
+        if (input)
+        {
+                std::string line;
+                while (std::getline(input, line))
+                {
+                        if (line.rfind("menu_accent_color=", 0) == 0)
+                        {
+                                buffer << "menu_accent_color=" << Menu::AccentColor.x << " " << Menu::AccentColor.y << " " << Menu::AccentColor.z << " " << Menu::AccentColor.w << '\n';
+                                found = true;
+                        }
+                        else
+                        {
+                                buffer << line << '\n';
+                        }
+                }
+                input.close();
+        }
+        if (!found)
+        {
+                buffer << "menu_accent_color=" << Menu::AccentColor.x << " " << Menu::AccentColor.y << " " << Menu::AccentColor.z << " " << Menu::AccentColor.w << '\n';
+        }
+        std::ofstream output(configPath);
+        output << buffer.str();
 }
