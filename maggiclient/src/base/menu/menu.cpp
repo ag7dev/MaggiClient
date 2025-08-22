@@ -183,3 +183,30 @@ void Menu::SaveStyle()
         std::ofstream output(configPath);
         output << buffer.str();
 }
+
+static float lighten(float c, float amount) { return std::min<float>(c + amount, 1.0f); }
+
+void Menu::ApplyAccentColor()
+{
+        if (Menu::AccentColor.x == Menu::LastAccentColor.x &&
+            Menu::AccentColor.y == Menu::LastAccentColor.y &&
+            Menu::AccentColor.z == Menu::LastAccentColor.z &&
+            Menu::AccentColor.w == Menu::LastAccentColor.w)
+                return;
+
+        ImVec4* colors = ImGui::GetStyle().Colors;
+        colors[ImGuiCol_CheckMark] = Menu::AccentColor;
+        colors[ImGuiCol_SliderGrab] = Menu::AccentColor;
+        colors[ImGuiCol_SliderGrabActive] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_Button] = Menu::AccentColor;
+        colors[ImGuiCol_ButtonHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_ButtonActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
+        colors[ImGuiCol_Header] = Menu::AccentColor;
+        colors[ImGuiCol_HeaderHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_HeaderActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
+        colors[ImGuiCol_Tab] = Menu::AccentColor;
+        colors[ImGuiCol_TabHovered] = ImVec4(lighten(Menu::AccentColor.x, 0.1f), lighten(Menu::AccentColor.y, 0.1f), lighten(Menu::AccentColor.z, 0.1f), Menu::AccentColor.w);
+        colors[ImGuiCol_TabActive] = ImVec4(lighten(Menu::AccentColor.x, 0.2f), lighten(Menu::AccentColor.y, 0.2f), lighten(Menu::AccentColor.z, 0.2f), Menu::AccentColor.w);
+
+        Menu::LastAccentColor = Menu::AccentColor;
+}

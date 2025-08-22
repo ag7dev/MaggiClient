@@ -67,15 +67,16 @@ bool __stdcall hook_wglSwapBuffers(_In_ HDC hdc)
 
 	wglMakeCurrent(Menu::HandleDeviceContext, Menu::MenuGLContext);
 
-	ImGui_ImplOpenGL2_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+        ImGui_ImplOpenGL2_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
 
-	ImGui::PushFont(Menu::Font);
+        ImGui::PushFont(Menu::Font);
+        Menu::ApplyAccentColor();
 
-	if (Menu::Open)
-	{
-		if (clipCursor.test_and_set()) GetClipCursor(&originalClip);
+        if (Menu::Open)
+        {
+                if (clipCursor.test_and_set()) GetClipCursor(&originalClip);
 
 		ClipCursor(NULL);
 		Menu::RenderMenu();
