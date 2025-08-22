@@ -18,6 +18,9 @@ struct Menu
         static inline ImFont* FontBold;
         static inline bool Initialized;
         static inline ImVec4 AccentColor{0.19f, 0.19f, 0.19f, 1.f};
+        static inline ImVec4 LastAccentColor{0.19f, 0.19f, 0.19f, 1.f};
+
+        static void ApplyAccentColor();
 
         static void SetupImgui();
         static void RenderMenu();
